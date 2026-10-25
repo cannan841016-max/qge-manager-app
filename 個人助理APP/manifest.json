@@ -1,0 +1,18 @@
+{
+  "name": "Q哥店長助理 Pro - 門市營運與工作重點管理",
+  "short_name": "Q哥店長助理",
+  "description": "專為 Q哥 門市店長打造的 iOS 智慧助理、店務待辦追蹤、早晚班交接與工作重點紀錄 APP",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#FF6B00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Q哥店長助理 Pro - iOS 智慧門市營運與工作重點 APP</title>
+
+  <!-- iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Q哥店長助理" />
+  <meta name="theme-color" content="#F2F2F7" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Desktop Preview Toolbar -->
+  <div class="desktop-toolbar">
+    <button id="btn-frame-mode" class="active" onclick="app.setViewportMode('frame')">📱 iOS 27 液態玻璃外框</button>
+    <button id="btn-full-mode" onclick="app.setViewportMode('fullscreen')">🖥️ 寬版全螢幕</button>
+    <button onclick="app.toggleTheme()" id="btn-desktop-theme">🌙 深色模式</button>
+    <button onclick="app.openReportModal('line')">📲 產出店長 LINE 日報</button>
+  </div>
+
+  <div class="app-stage" id="app-stage">
+    <div class="iphone-frame">
+      <!-- Toast Notification -->
+      <div class="ios-toast" id="ios-toast">已儲存變更</div>
+
+      <!-- iOS Status Bar & Dynamic Island -->
+      <div class="ios-status-bar">
+        <span id="ios-clock">09:41</span>
+        <div class="dynamic-island" id="dynamic-island" onclick="app.switchTab('assistant')">
+          <div class="island-dot"></div>
+          <div class="island-waveform">
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span id="island-status-text" style="margin-left:4px;">店長語音助理...</span>
+          </div>
+        </div>
+        <div class="status-icons">
+          <span>5G</span>
+          <span>📶</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <!-- iOS Navigation Header -->
+      <header class="ios-nav-header">
+        <div class="nav-title-group">
+          <span class="nav-subtitle" id="nav-date-subtitle">10月25日 星期日</span>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;">
+            <h1 class="nav-large-title" id="nav-main-title">門市總覽</h1>
+            <span class="qge-role-pill" id="header-store-badge">👑 Q哥店長</span>
+          </div>
+        </div>
+        <div class="nav-actions" id="nav-header-actions">
+          <button class="ios-pill-btn" onclick="app.openHighlightModal()">＋ 記店務重點</button>
+          <button class="ios-icon-btn" onclick="app.openTaskModal()" title="新增店務待辦">＋</button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Content -->
+      <main class="ios-content" id="ios-content">
+        <!-- TAB 1: HOME / DASHBOARD -->
+        <section class="tab-view active" id="view-home">
+          <div class="ai-hero-card">
+            <div class="ai-hero-top">
+              <span class="ai-badge">✨ iOS 27 Intelligence・店長簡報</span>
+              <span class="ai-mode-indicator" id="home-ai-mode-badge">內建智慧引擎</span>
+            </div>
+            <div class="ai-hero-summary" id="home-ai-briefing">
+              載入今日門市營運與交接摘要中...
+            </div>
+            <div class="quick-chips">
+              <button class="chip-btn" style="background:linear-gradient(135deg,#ff6b00,#ff9500);color:#fff;border:none;" onclick="app.switchTab('repair')">🛠️ iOS 重啟報告 & 維修 AI</button>
+              <button class="chip-btn" onclick="app.openReportModal('line')">📲 產出 LINE 交接/回報日報</button>
+              <button class="chip-btn" onclick="app.speakBriefing()">🔊 語音播報店務簡報</button>
+              <button class="chip-btn" onclick="app.switchTab('assistant')">💬 詢問店長 AI 助理</button>
+            </div>
+          </div>
+
+          <!-- Store Manager 4-KPI Bar -->
+          <div class="qge-kpi-bar">
+            <div class="qge-kpi-item" onclick="app.switchTab('tasks')">
+              <span class="qge-kpi-num" id="stat-pending-tasks">0</span>
+              <span class="qge-kpi-txt">待辦店務</span>
+            </div>
+            <div class="qge-kpi-item" onclick="app.setTaskFilterFromHome('high')">
+              <span class="qge-kpi-num" style="color:var(--ios-red);" id="stat-high-tasks">0</span>
+              <span class="qge-kpi-txt">急件/客訴維修</span>
+            </div>
+            <div class="qge-kpi-item" onclick="app.switchTab('tasks')">
+              <span class="qge-kpi-num" style="color:var(--ios-blue);" id="stat-avg-progress">0%</span>
+              <span class="qge-kpi-txt">店務完成率</span>
+            </div>
+            <div class="qge-kpi-item" onclick="app.switchTab('highlights')">
+              <span class="qge-kpi-num" style="color:#ff6b00;" id="stat-highlights-count">0</span>
+              <span class="qge-kpi-txt">工作重點紀錄</span>
+            </div>
+          </div>
+
+          <!-- Store Manager Exclusive Templates -->
+          <div class="ios-section-title">
+            <span>⚡ Q哥店長快速重點紀錄模板（點擊直接帶入）</span>
+          </div>
+          <div class="template-grid">
+            <button class="template-card-btn" onclick="app.openHighlightWithTemplate('shift')">
+              <span class="template-card-title">📢 早會 / 晚班交接</span>
+              <span class="template-card-sub">布達促銷方案、交接未結案件</span>
+            </button>
+            <button class="template-card-btn" onclick="app.openHighlightWithTemplate('repair')">
+              <span class="template-card-title">🛠️ 維修與客訴處理</span>
+              <span class="template-card-sub">特殊維修機況、保固客訴追蹤</span>
+            </button>
+            <button class="template-card-btn" onclick="app.openHighlightWithTemplate('tradein')">
+              <span class="template-card-title">📱 二手機收購與盤點</span>
+              <span class="template-card-sub">高單價收購審核、庫存料件盤點</span>
+            </button>
+            <button class="template-card-btn" onclick="app.openHighlightWithTemplate('sales')">
+              <span class="template-card-title">📈 門市業績與搭售檢討</span>
+              <span class="template-card-sub">新機/二手機毛利、保護貼包膜搭售</span>
+            </button>
+          </div>
+
+          <!-- Pinned / Recent Work Highlights -->
+          <div class="ios-section-title">
+            <span>📌 門市核心工作重點速覽</span>
+            <a href="javascript:void(0)" style="color:var(--ios-blue);text-decoration:none;font-size:12px;" onclick="app.switchTab('highlights')">查看全部 ›</a>
+          </div>
+          <div id="home-highlights-list"></div>
+
+          <!-- Priority Tasks -->
+          <div class="ios-section-title">
+            <span>🔥 店長優先待辦事項</span>
+            <a href="javascript:void(0)" style="color:var(--ios-blue);text-decoration:none;font-size:12px;" onclick="app.switchTab('tasks')">管理全部 ›</a>
+          </div>
+          <div id="home-tasks-list"></div>
+        </section>
+
+        <!-- TAB 2: AI ASSISTANT -->
+        <section class="tab-view" id="view-assistant">
+          <div class="quick-chips" style="margin-bottom: 10px; flex-shrink: 0;">
+            <button class="chip-btn" onclick="app.sendQuickPrompt('請幫我整理今日 Q哥門市的工作重點、未完成店務與維修客訴，產出一份給區經理與門市群組的 LINE 交接日報')">📲 產出給區經理/群組的日報</button>
+            <button class="chip-btn" onclick="app.sendQuickPrompt('幫我記錄工作重點：今日早會布達 iPhone 16 保護貼與包膜搭售方案，決議每筆維修單主動提供免費電池健檢，下一步晚班交接前抽查門市人員話術')">📢 範例：記早會交接重點</button>
+            <button class="chip-btn" onclick="app.sendQuickPrompt('幫我新增高優先待辦：下午 4:00 前確認 VIP 客人 iPhone 15 Pro Max 主機板維修進度並回電報價')">🛠️ 範例：新增維修追蹤待辦</button>
+            <button class="chip-btn" onclick="app.sendQuickPrompt('請幫我盤點目前門市有哪些高優先級的待辦事項與未結案的重點？')">🎯 盤點門市急件與重點</button>
+          </div>
+
+          <div class="chat-messages" id="chat-messages"></div>
+
+          <div class="chat-composer-wrap">
+            <div class="chat-input-bar">
+              <button class="voice-btn" id="btn-chat-voice" onclick="app.toggleVoiceInput('chat')" title="點擊開始語音輸入">🎙️</button>
+              <input
+                type="text"
+                id="chat-input"
+                class="chat-input"
+                placeholder="對店長助理說：「幫我記錄早會重點...」或「新增待辦...」"
+                onkeydown="if(event.key==='Enter') app.handleSendChat()"
+              />
+              <button class="send-btn" onclick="app.handleSendChat()" title="傳送">↑</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: WORK HIGHLIGHTS (工作重點紀錄) -->
+        <section class="tab-view" id="view-highlights">
+          <!-- Smart Quick Capture Box -->
+          <div class="ios-card" style="background: var(--ai-soft-bg); border: 1px solid rgba(99, 102, 241, 0.25);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:13px;font-weight:700;color:var(--ios-indigo);">✨ 店長語音/文字速記 ➔ 自動提煉店務重點</span>
+              <button class="mini-btn" id="btn-highlight-voice" onclick="app.toggleVoiceInput('quickHighlight')">🎙️ 語音口述</button>
+            </div>
+            <textarea
+              id="quick-highlight-raw"
+              class="ios-textarea"
+              style="min-height:68px;background:var(--ios-card);margin-bottom:8px;"
+              placeholder="直接口述或貼上店務筆記（例如：今日早會檢討本週二手機收購達成率 85%，決議加強高階 iPhone 15 Pro 收購估價引導，下一步需要在週五前完成門市展示機盤點與價格牌更新）..."
+            ></textarea>
+            <div style="display:flex;gap:8px;">
+              <button class="ios-pill-btn" style="flex:1;justify-content:center;" onclick="app.smartExtractHighlight()">✨ AI 自動提煉店務重點並存檔</button>
+              <button class="mini-btn" onclick="app.openHighlightModal()">手動建立</button>
+            </div>
+          </div>
+
+          <div class="ios-search-bar">
+            <span>🔍</span>
+            <input type="text" id="highlight-search" placeholder="搜尋店務重點、維修單、二手機、交接事項..." oninput="app.renderHighlights()" />
+          </div>
+
+          <div class="quick-chips" id="highlight-filter-segments" style="margin-bottom:12px;">
+            <button class="chip-btn" style="background:var(--ios-blue);color:#fff;" data-hl-filter="all" onclick="app.setHighlightFilter('all')">全部</button>
+            <button class="chip-btn" data-hl-filter="pinned" onclick="app.setHighlightFilter('pinned')">📌 核心釘選</button>
+            <button class="chip-btn" data-hl-filter="門市業績與促銷" onclick="app.setHighlightFilter('門市業績與促銷')">📈 業績與促銷</button>
+            <button class="chip-btn" data-hl-filter="維修與客訴處理" onclick="app.setHighlightFilter('維修與客訴處理')">🛠️ 維修與客訴</button>
+            <button class="chip-btn" data-hl-filter="二手機收購與庫存" onclick="app.setHighlightFilter('二手機收購與庫存')">📱 二手機與庫存</button>
+            <button class="chip-btn" data-hl-filter="早晚班交接與人事" onclick="app.setHighlightFilter('早晚班交接與人事')">📢 交接與人事</button>
+            <button class="chip-btn" data-hl-filter="總部會議與公告" onclick="app.setHighlightFilter('總部會議與公告')">🏢 總部會議</button>
+          </div>
+
+          <div id="highlights-list-container"></div>
+        </section>
+
+        <!-- TAB 4: TO-DO & TASKS (待辦事項與進度) -->
+        <section class="tab-view" id="view-tasks">
+          <div class="ios-search-bar">
+            <span>🔍</span>
+            <input type="text" id="task-search" placeholder="搜尋店務待辦、維修追蹤、盤點、排班..." oninput="app.renderTasks()" />
+          </div>
+
+          <div class="ios-segmented" id="task-filter-segments">
+            <button class="segment-btn active" onclick="app.setTaskFilter('all')">全部</button>
+            <button class="segment-btn" onclick="app.setTaskFilter('active')">進行中</button>
+            <button class="segment-btn" onclick="app.setTaskFilter('high')">🔴 急件/高優先</button>
+            <button class="segment-btn" onclick="app.setTaskFilter('completed')">✅ 已完成</button>
+          </div>
+
+          <div id="tasks-list-container"></div>
+        </section>
+
+        <!-- TAB 5: SETTINGS & AI CONFIG -->
+        <section class="tab-view" id="view-settings">
+          <div class="ios-section-title"><span>📱 下方導覽列顯示項目與順序設定</span></div>
+          <div class="ios-card">
+            <p style="font-size:12.5px;color:var(--ios-text-secondary);margin-bottom:10px;line-height:1.45;">
+              自由勾選要在下方導覽列顯示的功能分頁，並可點擊「▲ / ▼」調整排列順序（即時生效）：
+            </p>
+            <div class="quick-chips" style="margin-bottom:10px;">
+              <button class="mini-btn" onclick="app.applyNavPreset('all')">🌟 全部顯示 (6項)</button>
+              <button class="mini-btn" onclick="app.applyNavPreset('manager')">👑 店務精簡版 (4項)</button>
+              <button class="mini-btn" onclick="app.applyNavPreset('repair')">🛠️ 維修櫃檯版 (4項)</button>
+            </div>
+            <div id="nav-customizer-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+
+          <div class="ios-section-title"><span>🏪 Q哥門市與店長資訊設定</span></div>
+          <div class="ios-card">
+            <div class="form-group">
+              <label class="form-label">所屬門市名稱（會顯示於頂部徽章與 LINE 交接日報標題）</label>
+              <input type="text" id="setting-store-name" class="ios-input" placeholder="例如：Q哥 旗艦門市" value="Q哥 門市" onchange="app.saveSettingsFromUI()" />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">店長稱呼 / 職稱</label>
+              <input type="text" id="setting-manager-name" class="ios-input" placeholder="例如：店長" value="店長" onchange="app.saveSettingsFromUI()" />
+            </div>
+          </div>
+
+          <div class="ios-section-title"><span>🤖 AI 智慧助理引擎設定</span></div>
+          <div class="ios-card">
+            <div class="form-group">
+              <label class="form-label">運作模式（支援免 Key 內建店長助理 & 真實 LLM API）</label>
+              <select id="setting-ai-provider" class="ios-select" onchange="app.saveSettingsFromUI()">
+                <option value="auto">自動切換（有填 API Key 用真實 AI，未填用內建店長智慧助理）</option>
+                <option value="builtin">僅使用內建店長智慧助理（免 API Key・離線可用）</option>
+                <option value="gemini">Google Gemini API</option>
+                <option value="openai">OpenAI ChatGPT API</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Google Gemini API Key（選填，僅儲存在您的手機/電腦本機）</label>
+              <input type="password" id="setting-gemini-key" class="ios-input" placeholder="AIzaSy..." onchange="app.saveSettingsFromUI()" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Gemini 模型名稱</label>
+              <input type="text" id="setting-gemini-model" class="ios-input" value="gemini-2.5-flash" onchange="app.saveSettingsFromUI()" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">OpenAI API Key（選填，僅儲存在您的手機/電腦本機）</label>
+              <input type="password" id="setting-openai-key" class="ios-input" placeholder="sk-..." onchange="app.saveSettingsFromUI()" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">OpenAI 模型名稱</label>
+              <input type="text" id="setting-openai-model" class="ios-input" value="gpt-4o-mini" onchange="app.saveSettingsFromUI()" />
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px;">
+              <span style="font-size:14px;font-weight:600;">🔊 AI 回覆自動語音朗讀</span>
+              <input type="checkbox" id="setting-tts-enabled" style="width:20px;height:20px;" onchange="app.saveSettingsFromUI()" />
+            </div>
+          </div>
+
+          <div class="ios-section-title"><span>📲 如何安裝到 iPhone 主畫面？</span></div>
+          <div class="ios-card">
+            <ol style="padding-left:18px;font-size:13.5px;line-height:1.65;color:var(--ios-text);">
+              <li>在 iPhone 上使用 <strong>Safari 瀏覽器</strong> 開啟本網頁。</li>
+              <li>點擊畫面底部中間的 <strong>「分享」按鈕（方框向上箭頭 📤）</strong>。</li>
+              <li>向下滑動選單，點選 <strong>「加入主畫面」(Add to Home Screen)</strong>。</li>
+              <li>點擊右上角「新增」，即可在 iPhone 桌面以 <strong>全螢幕「Q哥店長助理」APP</strong> 獨立開啟！</li>
+            </ol>
+          </div>
+
+          <div class="ios-section-title"><span>💾 店務資料備份與重置</span></div>
+          <div class="ios-card" style="display:flex;flex-direction:column;gap:10px;">
+            <button class="ios-btn-secondary" onclick="app.exportDataJSON()">📤 匯出全部店務資料備份 (.json)</button>
+            <label class="ios-btn-secondary" style="text-align:center;display:block;">
+              📥 匯入店務資料備份 (.json)
+              <input type="file" accept=".json" style="display:none;" onchange="app.importDataJSON(event)" />
+            </label>
+            <button class="ios-btn-secondary" style="color:var(--ios-red);" onclick="app.resetDemoData()">🔄 重置為 Q哥店長預設範例資料</button>
+          </div>
+        </section>
+
+        <!-- TAB 6: Q哥 iOS REPAIR AI & PANIC LOG ANALYZER (維修專用 AI) -->
+        <section class="tab-view" id="view-repair">
+          <!-- Panic Log Analyzer Card -->
+          <div class="ios-card" style="border: 1.5px solid rgba(56, 189, 248, 0.4);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <div>
+                <span class="ai-badge" style="background:linear-gradient(135deg,#0284c7,#6366f1);">🛠️ Q哥 iOS 維修專用 AI</span>
+                <span style="font-size:12px;font-weight:700;color:var(--ios-text-secondary);margin-left:6px;">panic-full / 故障秒判讀</span>
+              </div>
+              <button class="mini-btn" onclick="app.toggleVoiceInput('repair')">🎙️ 語音口述故障</button>
+            </div>
+
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+              <select id="repair-device-model" class="ios-select" style="flex:1;padding:8px 10px;font-size:12.5px;" onchange="app.onRepairModelChange()">
+              </select>
+              <button class="mini-btn" style="flex-shrink:0;" onclick="app.openAddModelModal()">➕ 新增機型</button>
+              <button class="mini-btn" style="flex-shrink:0;" onclick="app.clearRepairInput()">🧹 清空</button>
+            </div>
+
+            <div id="model-known-issue-banner" style="background:rgba(0,102,255,0.08);border:1px solid rgba(0,102,255,0.2);border-radius:14px;padding:8px 11px;font-size:12px;color:var(--ios-text);margin-bottom:8px;line-height:1.45;">
+            </div>
+
+            <div style="font-size:11.5px;color:var(--ios-text-secondary);margin-bottom:6px;">
+              👇 點擊常見 <strong>panic-full 重啟代碼</strong> 直接帶入，或貼上分析資料 / 維修狀況：
+            </div>
+            <div class="quick-chips" style="margin-bottom:8px;">
+              <button class="code-pill" onclick="app.TriggerPanicCode('Missing sensor(s): prs0')">prs0 (尾插氣壓計)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('Missing sensor(s): TG0B TG0V')">TG0B/TG0V (電池SWI)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('Missing sensor(s): mic1')">mic1 (尾插麥克風)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('Missing sensor(s): mic2')">mic2/mic4 (開機閃光排線)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('thermalmonitord: no successful checkins in 180 seconds')">thermalmonitord (180秒重啟)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('AOP PANIC - flood / als / prox')">AOP PANIC (聽筒感光)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('userspace watchdog timeout: backboardd')">backboardd (觸控/顯示)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('i2c0 / i2c1 / i2c2 bus hang')">i2c 總線卡死</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('ans2 / nvme / NAND panic')">NAND/nvme (硬碟虛焊)</button>
+              <button class="code-pill" onclick="app.TriggerPanicCode('baseband / Mav20 / 無服務')">baseband (基頻掉點/無服務)</button>
+            </div>
+
+            <textarea
+              id="panic-log-input"
+              class="panic-console"
+              placeholder="在此貼上 iOS「分析資料 -> panic-full / ResetCounter」內容，或直接輸入維修問題：&#10;例如：userspace watchdog timeout: no successful checkins from thermalmonitord... Missing sensor(s): prs0&#10;或輸入：iPhone 13 Pro 摔機後白屏 / 換完電池後每3分鐘重啟..."
+            ></textarea>
+
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button class="ios-pill-btn" style="flex:1;justify-content:center;padding:10px;font-size:13.5px;background:linear-gradient(135deg,#ff6b00,#e11d48);" onclick="app.analyzeRepairIssue()">
+                🔍 立即 AI 診斷根因・排查步驟・店長報價話術
+              </button>
+            </div>
+          </div>
+
+          <!-- Diagnostic Result Output Area -->
+          <div id="repair-diag-output"></div>
+
+          <!-- Quick Common Repair Scenarios Encyclopedia -->
+          <div class="ios-section-title">
+            <span>📚 Q哥門市常見維修疑難速查百科（點擊即看 SOP 與對客話術）</span>
+          </div>
+          <div class="template-grid">
+            <button class="template-card-btn" onclick="app.TriggerRepairGuide('restart_180s')">
+              <span class="template-card-title">🔁 3分鐘(180秒)定時重啟</span>
+              <span class="template-card-sub">尾插/開機排/電池SWI/無線充排查表</span>
+            </button>
+            <button class="template-card-btn" onclick="app.TriggerRepairGuide('unknown_part')">
+              <span class="template-card-title">🔋 換電池/螢幕「未知部件」</span>
+              <span class="template-card-sub">iOS 18 零件綁定、移植電芯與對客話術</span>
+            </button>
+            <button class="template-card-btn" onclick="app.TriggerRepairGuide('face_id')">
+              <span class="template-card-title">👤 Face ID 失效/高一點低一點</span>
+              <span class="template-card-sub">點陣投影/泛光感應/聽筒排線檢測</span>
+            </button>
+            <button class="template-card-btn" onclick="app.TriggerRepairGuide('no_service')">
+              <span class="template-card-title">📶 無服務 / 數據機韌體空白</span>
+              <span class="template-card-sub">雙層主板中層掉點、射頻與基頻修復</span>
+            </button>
+            <button class="template-card-btn" onclick="app.TriggerRepairGuide('screen_white_green')">
+              <span class="template-card-title">📱 13/14 Pro 白屏/綠屏閃爍</span>
+              <span class="template-card-sub">螢幕飛線修復 vs 更換總成評估與保固</span>
+            </button>
+            <button class="template-card-btn" onclick="app.TriggerRepairGuide('water_damage')">
+              <span class="template-card-title">💧 泡水受潮機接件 SOP</span>
+              <span class="template-card-sub">拆機除潮報價、不保固條款與資料救援</span>
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <!-- iOS Bottom Tab Bar (Dynamic) -->
+      <nav class="ios-tab-bar" id="ios-tab-bar">
+        <button class="tab-item active" data-tab="home" onclick="app.switchTab('home')">
+          <span class="tab-icon">🏪</span>
+          <span class="tab-label">門市總覽</span>
+        </button>
+        <button class="tab-item" data-tab="repair" onclick="app.switchTab('repair')">
+          <span class="tab-icon">🛠️</span>
+          <span class="tab-label">維修AI</span>
+        </button>
+        <button class="tab-item" data-tab="highlights" onclick="app.switchTab('highlights')">
+          <span class="tab-icon">📌</span>
+          <span class="tab-label">工作重點</span>
+        </button>
+        <button class="tab-item" data-tab="assistant" onclick="app.switchTab('assistant')">
+          <span class="tab-icon">✨</span>
+          <span class="tab-label">店長助理</span>
+        </button>
+        <button class="tab-item" data-tab="tasks" onclick="app.switchTab('tasks')">
+          <span class="tab-icon">☑️</span>
+          <span class="tab-label">店務待辦</span>
+        </button>
+        <button class="tab-item" data-tab="settings" onclick="app.switchTab('settings')">
+          <span class="tab-icon">⚙️</span>
+          <span class="tab-label">設定</span>
+        </button>
+      </nav>
+
+      <div class="ios-home-indicator"></div>
+
+      <!-- MODAL 1: ADD / EDIT WORK HIGHLIGHT (工作重點紀錄) -->
+      <div class="ios-modal-backdrop" id="modal-highlight">
+        <div class="ios-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <span class="sheet-title" id="modal-highlight-title">新增門市工作重點</span>
+            <button class="mini-btn" onclick="app.closeModal('modal-highlight')">關閉</button>
+          </div>
+          <input type="hidden" id="hl-id" />
+          <div class="form-group">
+            <label class="form-label">工作重點標題 *</label>
+            <input type="text" id="hl-title" class="ios-input" placeholder="例如：早晚班交接與週末促銷活動布達" />
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group">
+              <label class="form-label">店務分類標籤</label>
+              <select id="hl-category" class="ios-select">
+                <option value="門市業績與促銷">📈 門市業績與促銷</option>
+                <option value="維修與客訴處理">🛠️ 維修與客訴處理</option>
+                <option value="二手機收購與庫存">📱 二手機收購與庫存</option>
+                <option value="早晚班交接與人事">📢 早晚班交接與人事</option>
+                <option value="總部會議與公告">🏢 總部會議與公告</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">置頂釘選</label>
+              <select id="hl-pinned" class="ios-select">
+                <option value="true">📌 釘選為核心重點</option>
+                <option value="false">一般重點紀錄</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">核心工作重點（每行一條重點）*</label>
+            <textarea id="hl-points" class="ios-textarea" placeholder="• 本日新機與二手機銷售毛利達成進度&#10;• 維修部 iPhone 電池與螢幕料件庫存充足&#10;• 提醒晚班同仁落實保護貼與充電頭加購話術"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">店長決策 / 交接結論（選填）</label>
+            <input type="text" id="hl-decision" class="ios-input" placeholder="例如：每筆手機維修結帳時主動提供配件 85 折加購優惠" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">下一步行動 Action Item（可一鍵轉為店務待辦）</label>
+            <input type="text" id="hl-action" class="ios-input" placeholder="例如：晚班結帳前盤點高單價二手機展示櫃並回報群組" />
+          </div>
+          <button class="ios-btn-primary" onclick="app.saveHighlightFromModal()">儲存門市工作重點</button>
+        </div>
+      </div>
+
+      <!-- MODAL 2: ADD / EDIT TASK (店務待辦事項) -->
+      <div class="ios-modal-backdrop" id="modal-task">
+        <div class="ios-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <span class="sheet-title" id="modal-task-title">新增店務待辦任務</span>
+            <button class="mini-btn" onclick="app.closeModal('modal-task')">關閉</button>
+          </div>
+          <input type="hidden" id="task-id" />
+          <div class="form-group">
+            <label class="form-label">店務任務名稱 *</label>
+            <input type="text" id="task-title-input" class="ios-input" placeholder="例如：追蹤 VIP 客戶 iPhone 15 Pro 維修進度並回電" />
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group">
+              <label class="form-label">優先級</label>
+              <select id="task-priority-input" class="ios-select">
+                <option value="high">🔴 急件 / 高優先級</option>
+                <option value="medium" selected>🟠 中優先級</option>
+                <option value="low">🔵 例行店務</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">店務分類</label>
+              <select id="task-category-input" class="ios-select">
+                <option value="店務營運與結帳">🏪 店務營運與結帳</option>
+                <option value="維修與客訴追蹤">🛠️ 維修與客訴追蹤</option>
+                <option value="盤點與叫貨調度">📦 盤點與叫貨調度</option>
+                <option value="人員排班與訓練">👥 人員排班與訓練</option>
+                <option value="總部回報事項">🏢 總部回報事項</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group">
+              <label class="form-label">截止時間 / 班別</label>
+              <input type="text" id="task-due-input" class="ios-input" placeholder="例如：今日晚班交接前 或 18:00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">目前進度 (%)</label>
+              <input type="number" id="task-progress-input" class="ios-input" min="0" max="100" step="10" value="0" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">執行細節 / 客戶單號 / 備註</label>
+            <textarea id="task-notes-input" class="ios-textarea" style="min-height:64px;" placeholder="填寫維修單號、客戶聯絡資訊、料件調度狀況或交接備註..."></textarea>
+          </div>
+          <button class="ios-btn-primary" onclick="app.saveTaskFromModal()">儲存店務待辦</button>
+        </div>
+      </div>
+
+      <!-- MODAL 3: Q哥 STORE MANAGER REPORT GENERATOR -->
+      <div class="ios-modal-backdrop" id="modal-report">
+        <div class="ios-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <span class="sheet-title">📲 Q哥店長日報 / 週報生成器</span>
+            <button class="mini-btn" onclick="app.closeModal('modal-report')">關閉</button>
+          </div>
+          <div class="ios-segmented" style="margin-bottom:10px;">
+            <button class="segment-btn active" id="btn-rep-line" onclick="app.switchReportFormat('line')">📱 LINE 群組交接/回報版</button>
+            <button class="segment-btn" id="btn-rep-weekly" onclick="app.switchReportFormat('weekly')">📋 區經理週會完整報告版</button>
+          </div>
+          <p style="font-size:12px;color:var(--ios-text-secondary);margin-bottom:8px;">
+            已根據您目前的「門市工作重點」與「店務待辦進度」自動排版，可直接一鍵複製貼到 **Q哥店長/區經理 LINE 群組** 或 **門市交接群組**：
+          </p>
+          <textarea id="report-output-textarea" class="ios-textarea" style="min-height:240px;font-size:13px;line-height:1.55;"></textarea>
+          <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="ios-btn-primary" style="margin-top:0;background:linear-gradient(135deg,#ff6b00,#ff9500);" onclick="app.copyReportText()">📋 一鍵複製貼到 LINE 群組</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL 4: ADD / MANAGE IPHONE & IPAD MODELS (新增/管理維修機型庫) -->
+      <div class="ios-modal-backdrop" id="modal-add-model">
+        <div class="ios-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <span class="sheet-title">📱 新增 / 管理 iPhone 維修機型庫</span>
+            <button class="mini-btn" onclick="app.closeModal('modal-add-model')">關閉</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">機型名稱 *（例如：iPhone 17 Pro Max / iPad Air M3）</label>
+            <input type="text" id="new-model-name" class="ios-input" placeholder="輸入要新增的機型名稱..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">所屬系列分組</label>
+            <select id="new-model-group" class="ios-select">
+              <option value="最新旗艦與新世代機型">🔥 最新旗艦與新世代機型</option>
+              <option value="iPhone 16 全系列">📱 iPhone 16 全系列</option>
+              <option value="iPhone 15 全系列">📱 iPhone 15 全系列</option>
+              <option value="iPhone 14 全系列">📱 iPhone 14 全系列</option>
+              <option value="iPhone 13 / 12 系列">📱 iPhone 13 / 12 系列</option>
+              <option value="iPhone 11 / X / SE / 經典系列">📱 iPhone 11 / X / SE / 經典系列</option>
+              <option value="iPad / Apple Watch 系列">📟 iPad / Apple Watch 系列</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">該機型專屬通病 / 門市拆修注意事項 *</label>
+            <textarea id="new-model-notes" class="ios-textarea" style="min-height:70px;" placeholder="例如：採用雙層堆疊主機板、拆螢幕注意右側排線、常見通病為尾插 prs0 與背蓋無線充 mic2..."></textarea>
+          </div>
+          <button class="ios-btn-primary" onclick="app.saveNewDeviceModel()">＋ 儲存並加入維修 AI 機型庫</button>
+
+          <div class="ios-section-title" style="margin-top:16px;">
+            <span>目前機型庫清單（支援一鍵刪除自訂機型）</span>
+          </div>
+          <div id="custom-models-manage-list" style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

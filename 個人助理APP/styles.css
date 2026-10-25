@@ -1,0 +1,1376 @@
+:root {
+  /* iOS 27 Liquid Glass Light Mode Palette */
+  --ios-bg: #EEF1F8;
+  --ios-card: rgba(255, 255, 255, 0.72);
+  --ios-card-secondary: rgba(255, 255, 255, 0.52);
+  --ios-text: #0F172A;
+  --ios-text-secondary: #475569;
+  --ios-text-tertiary: #64748B;
+  --ios-separator: rgba(15, 23, 42, 0.08);
+  --ios-grouped-bg: #E8ECF5;
+  --ios-glass: rgba(255, 255, 255, 0.62);
+  --ios-glass-strong: rgba(255, 255, 255, 0.78);
+  --ios-glass-border: rgba(255, 255, 255, 0.85);
+  --ios-specular: inset 0 1.5px 1px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(255, 255, 255, 0.35);
+
+  /* iOS 27 Vibrant Spatial Accents */
+  --ios-blue: #0066FF;
+  --ios-indigo: #5E5CE6;
+  --ios-purple: #BF5AF2;
+  --ios-pink: #FF375F;
+  --ios-red: #FF3B30;
+  --ios-orange: #FF6B00;
+  --ios-yellow: #FFD60A;
+  --ios-green: #30D158;
+  --ios-teal: #64D2FF;
+
+  /* Apple Intelligence 2.0 / iOS 27 Liquid Aura */
+  --ai-gradient: linear-gradient(135deg, #22d3ee 0%, #6366f1 35%, #c084fc 70%, #fb7185 100%);
+  --ai-soft-bg: linear-gradient(135deg, rgba(34, 211, 238, 0.14) 0%, rgba(99, 102, 241, 0.14) 50%, rgba(251, 113, 133, 0.14) 100%);
+  --mesh-bg:
+    radial-gradient(at 12% 8%, rgba(56, 189, 248, 0.25) 0px, transparent 52%),
+    radial-gradient(at 88% 15%, rgba(192, 132, 252, 0.25) 0px, transparent 52%),
+    radial-gradient(at 50% 88%, rgba(255, 107, 0, 0.16) 0px, transparent 55%),
+    #EEF2F9;
+
+  /* Liquid Glass Shadows & Squircle Radius */
+  --shadow-sm: 0 8px 24px -4px rgba(15, 23, 42, 0.06), var(--ios-specular);
+  --shadow-md: 0 16px 36px -6px rgba(15, 23, 42, 0.12), var(--ios-specular);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.28);
+  --radius-sm: 14px;
+  --radius-md: 24px;
+  --radius-lg: 30px;
+  --radius-xl: 38px;
+
+  /* Safe Areas */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+[data-theme="dark"] {
+  --ios-bg: #05070F;
+  --ios-card: rgba(24, 28, 42, 0.65);
+  --ios-card-secondary: rgba(36, 42, 60, 0.55);
+  --ios-text: #F8FAFC;
+  --ios-text-secondary: #94A3B8;
+  --ios-text-tertiary: #64748B;
+  --ios-separator: rgba(255, 255, 255, 0.1);
+  --ios-grouped-bg: #05070F;
+  --ios-glass: rgba(18, 22, 34, 0.62);
+  --ios-glass-strong: rgba(24, 28, 44, 0.8);
+  --ios-glass-border: rgba(255, 255, 255, 0.16);
+  --ios-specular: inset 0 1px 1px rgba(255, 255, 255, 0.22), inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+  --mesh-bg:
+    radial-gradient(at 15% 10%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
+    radial-gradient(at 85% 18%, rgba(168, 85, 247, 0.24) 0px, transparent 52%),
+    radial-gradient(at 50% 85%, rgba(255, 107, 0, 0.18) 0px, transparent 55%),
+    #060813;
+  --shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.45), var(--ios-specular);
+  --shadow-md: 0 18px 40px rgba(0, 0, 0, 0.6), var(--ios-specular);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", "PingFang TC", "Helvetica Neue", "Microsoft JhengHei", sans-serif;
+  background-color: #070a14;
+  color: var(--ios-text);
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Desktop Toolbar */
+.desktop-toolbar {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.desktop-toolbar button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.desktop-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.desktop-toolbar button.active {
+  background: linear-gradient(135deg, #0066ff, #5e5ce6);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 102, 255, 0.45);
+}
+
+/* Outer Showcase Stage on Desktop */
+.app-stage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(192, 132, 252, 0.18) 0%, transparent 45%),
+    #060913;
+  padding: 18px;
+}
+
+/* iPhone 17 Pro / iOS 27 Ultra-Thin Bezels Device Frame */
+.iphone-frame {
+  width: 416px;
+  height: min(888px, 95vh);
+  background: var(--mesh-bg);
+  border-radius: 58px;
+  box-shadow:
+    0 0 0 8px #1e2028,
+    0 0 0 10px #4a4e5d,
+    0 0 45px rgba(99, 102, 241, 0.22),
+    0 35px 90px rgba(0, 0, 0, 0.75);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Fullscreen mode override */
+.app-stage.fullscreen-mode {
+  padding: 0;
+}
+
+.app-stage.fullscreen-mode .iphone-frame {
+  width: 100vw;
+  height: 100vh;
+  max-width: 820px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .desktop-toolbar {
+    display: none !important;
+  }
+  .app-stage {
+    padding: 0;
+  }
+  .iphone-frame {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* iOS 27 Status Bar & Spatial Dynamic Island */
+.ios-status-bar {
+  height: calc(48px + var(--safe-top));
+  padding: var(--safe-top) 28px 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ios-text);
+  background: transparent;
+  z-index: 30;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.dynamic-island {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 31px;
+  background: rgba(8, 10, 18, 0.92);
+  backdrop-filter: blur(20px);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+}
+
+.dynamic-island:hover {
+  width: 148px;
+  box-shadow: 0 6px 22px rgba(99, 102, 241, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.dynamic-island.voice-active {
+  width: 215px;
+  box-shadow: 0 0 24px rgba(192, 132, 252, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.75);
+}
+
+.island-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #38bdf8 0%, #6366f1 70%, #0f172a 100%);
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.island-waveform {
+  display: none;
+  align-items: center;
+  gap: 3px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dynamic-island.voice-active .island-waveform {
+  display: flex;
+}
+
+.wave-bar {
+  width: 3px;
+  height: 12px;
+  background: #c084fc;
+  border-radius: 2px;
+  animation: waveAnim 0.8s infinite ease-in-out;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.15s; height: 16px; background: #38bdf8; }
+.wave-bar:nth-child(3) { animation-delay: 0.3s; height: 10px; background: #f472b6; }
+
+@keyframes waveAnim {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1.25); }
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+/* iOS 27 Floating Liquid Glass Header */
+.ios-nav-header {
+  margin: 4px 14px 6px;
+  padding: 10px 16px;
+  background: var(--ios-glass);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--ios-glass-border);
+  border-radius: 26px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 25;
+  flex-shrink: 0;
+}
+
+.nav-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-subtitle {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.nav-large-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ios-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* iOS 27 Specular Liquid Glass Buttons */
+.ios-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--ios-glass-border);
+  background: var(--ios-card);
+  backdrop-filter: blur(16px);
+  color: var(--ios-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ios-icon-btn:active {
+  transform: scale(0.9);
+}
+
+.ios-pill-btn {
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: var(--ai-gradient);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ios-pill-btn:active {
+  transform: scale(0.94);
+}
+
+/* Main Scrollable Content Area */
+.ios-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 14px 112px 14px;
+  scroll-behavior: smooth;
+}
+
+.ios-content::-webkit-scrollbar {
+  width: 0px;
+}
+
+.tab-view {
+  display: none;
+  animation: ios27SpringIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tab-view.active {
+  display: block;
+}
+
+#view-assistant.active {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@keyframes ios27SpringIn {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* iOS 27 Liquid Glass Cards & Sections */
+.ios-section-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+  margin: 16px 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ios-section-title:first-child {
+  margin-top: 4px;
+}
+
+.ios-card {
+  background: var(--ios-card);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+  border: 1px solid var(--ios-glass-border);
+}
+
+/* iOS 27 Apple Intelligence 2.0 Prism Card */
+.ai-hero-card {
+  background: var(--ios-card);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid var(--ios-glass-border);
+  box-shadow: var(--shadow-md), 0 0 28px rgba(99, 102, 241, 0.14);
+}
+
+.ai-hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ai-soft-bg);
+  pointer-events: none;
+}
+
+.ai-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--ai-gradient);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.ai-mode-indicator {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+  background: var(--ios-card-secondary);
+  border: 1px solid var(--ios-glass-border);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.ai-hero-summary {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ios-text);
+  position: relative;
+  margin-bottom: 13px;
+}
+
+/* Quick Chips (Liquid Glass Capsules) */
+.quick-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.quick-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip-btn {
+  flex-shrink: 0;
+  background: var(--ios-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--ios-glass-border);
+  color: var(--ios-text);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.18s ease;
+}
+
+.chip-btn:active {
+  transform: scale(0.94);
+}
+
+/* iOS 27 Capsule Segmented Control */
+.ios-segmented {
+  display: flex;
+  background: var(--ios-card-secondary);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--ios-glass-border);
+  padding: 4px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.segment-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 7px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.segment-btn.active {
+  background: var(--ios-card);
+  color: var(--ios-text);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), var(--ios-specular);
+}
+
+/* iOS 27 Pill Search Bar */
+.ios-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ios-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--ios-glass-border);
+  border-radius: 999px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.ios-search-bar input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 13.5px;
+  color: var(--ios-text);
+  outline: none;
+}
+
+/* Task Item (Liquid Glass Card) */
+.task-item {
+  background: var(--ios-card);
+  backdrop-filter: blur(26px) saturate(180%);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border: 1px solid var(--ios-glass-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.task-item.completed {
+  opacity: 0.65;
+}
+
+.task-main-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ios-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--ios-blue);
+  background: rgba(0, 102, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: transparent;
+  font-size: 13px;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.task-item.completed .ios-checkbox {
+  background: var(--ios-green);
+  border-color: var(--ios-green);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(48, 209, 88, 0.4);
+}
+
+.task-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ios-text);
+  line-height: 1.35;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: var(--ios-text-tertiary);
+}
+
+.task-notes {
+  font-size: 12.5px;
+  color: var(--ios-text-secondary);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-high {
+  background: rgba(255, 59, 48, 0.15);
+  color: var(--ios-red);
+}
+.badge-medium {
+  background: rgba(255, 149, 0, 0.15);
+  color: var(--ios-orange);
+}
+.badge-low {
+  background: rgba(0, 102, 255, 0.15);
+  color: var(--ios-blue);
+}
+.badge-category {
+  background: rgba(94, 92, 230, 0.14);
+  color: var(--ios-indigo);
+}
+.badge-date {
+  background: rgba(120, 120, 128, 0.14);
+  color: var(--ios-text-secondary);
+}
+
+.task-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ios-separator);
+}
+
+.task-progress-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--ios-blue);
+  height: 5px;
+  cursor: pointer;
+}
+
+.task-progress-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+  min-width: 42px;
+  text-align: right;
+}
+
+.task-actions-btn {
+  background: transparent;
+  border: none;
+  color: var(--ios-text-tertiary);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Work Highlight Cards (Liquid Glass) */
+.highlight-card {
+  background: var(--ios-card);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--ios-glass-border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.highlight-card.pinned {
+  border-left: 4px solid #ff6b00;
+}
+
+.highlight-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.highlight-title {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--ios-text);
+  line-height: 1.35;
+}
+
+.highlight-points {
+  list-style: none;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.highlight-points li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ios-text);
+  padding-left: 16px;
+  position: relative;
+}
+
+.highlight-points li::before {
+  content: "•";
+  color: var(--ios-blue);
+  font-weight: bold;
+  position: absolute;
+  left: 2px;
+}
+
+.highlight-decision-box {
+  background: rgba(94, 92, 230, 0.1);
+  border: 1px solid rgba(94, 92, 230, 0.2);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--ios-text);
+  line-height: 1.45;
+}
+
+.highlight-decision-box strong {
+  color: var(--ios-indigo);
+}
+
+.highlight-action-box {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ios-separator);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mini-btn {
+  border: 1px solid var(--ios-glass-border);
+  background: rgba(0, 102, 255, 0.12);
+  color: var(--ios-blue);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.15s ease;
+}
+
+.mini-btn:active {
+  transform: scale(0.94);
+}
+
+.mini-btn.danger {
+  background: rgba(255, 59, 48, 0.12);
+  color: var(--ios-red);
+}
+
+/* AI Assistant Chat Layout */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 12px;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 0;
+}
+
+.msg-row {
+  display: flex;
+  flex-direction: column;
+  max-width: 86%;
+}
+
+.msg-row.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.msg-row.assistant {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.msg-bubble {
+  padding: 12px 16px;
+  border-radius: 22px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.msg-row.user .msg-bubble {
+  background: linear-gradient(135deg, #0066ff 0%, #5e5ce6 100%);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 102, 255, 0.28);
+}
+
+.msg-row.assistant .msg-bubble {
+  background: var(--ios-card);
+  backdrop-filter: blur(24px);
+  color: var(--ios-text);
+  border: 1px solid var(--ios-glass-border);
+  border-bottom-left-radius: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+.msg-meta {
+  font-size: 11px;
+  color: var(--ios-text-tertiary);
+  margin-top: 4px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.msg-action-card {
+  margin-top: 8px;
+  background: var(--ai-soft-bg);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 14px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ios-indigo);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-composer-wrap {
+  padding-top: 8px;
+  border-top: 1px solid var(--ios-separator);
+}
+
+.chat-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.voice-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: var(--ai-gradient);
+  color: #fff;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(168, 85, 247, 0.35);
+  transition: all 0.2s ease;
+}
+
+.voice-btn.listening {
+  animation: pulseVoice 1.2s infinite;
+  background: var(--ios-red);
+}
+
+@keyframes pulseVoice {
+  0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.6); transform: scale(1); }
+  70% { box-shadow: 0 0 0 12px rgba(255, 59, 48, 0); transform: scale(1.06); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); transform: scale(1); }
+}
+
+.chat-input {
+  flex: 1;
+  background: var(--ios-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--ios-glass-border);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 13.5px;
+  color: var(--ios-text);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+}
+
+.send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #0066ff, #5e5ce6);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.35);
+}
+
+/* =========================================================
+   iOS 27 SIGNATURE: FLOATING LIQUID GLASS CAPSULE TAB DOCK
+   ========================================================= */
+.ios-tab-bar {
+  position: absolute;
+  bottom: calc(14px + var(--safe-bottom));
+  left: 12px;
+  right: 12px;
+  height: 66px;
+  padding: 5px 6px;
+  background: var(--ios-glass-strong);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+  border: 1.5px solid var(--ios-glass-border);
+  border-radius: 999px;
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.2),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.25);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  gap: 3px;
+  z-index: 40;
+}
+
+.tab-item {
+  border: none;
+  background: transparent;
+  height: 100%;
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--ios-text-secondary);
+  cursor: pointer;
+  padding: 4px 2px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tab-item:active {
+  transform: scale(0.9);
+}
+
+.tab-item.active {
+  color: var(--ios-blue);
+  background: rgba(0, 102, 255, 0.13);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.75),
+    0 4px 12px rgba(0, 102, 255, 0.14);
+}
+
+[data-theme="dark"] .tab-item.active {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.18);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.22),
+    0 4px 12px rgba(56, 189, 248, 0.2);
+}
+
+.tab-icon {
+  font-size: 19px;
+  line-height: 1;
+}
+
+.tab-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* iOS Home Indicator Bar */
+.ios-home-indicator {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: var(--ios-text);
+  opacity: 0.2;
+  border-radius: 999px;
+  z-index: 45;
+  pointer-events: none;
+}
+
+/* iOS 27 Spatial Glass Sheets / Modals */
+.ios-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 9, 19, 0.45);
+  backdrop-filter: blur(10px);
+  z-index: 80;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ios-modal-backdrop.open {
+  display: flex;
+  animation: fadeBackdrop 0.2s ease;
+}
+
+@keyframes fadeBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ios-sheet {
+  width: calc(100% - 12px);
+  margin-bottom: 8px;
+  max-height: 88%;
+  background: var(--ios-glass-strong);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1.5px solid var(--ios-glass-border);
+  border-radius: 34px;
+  padding: 12px 18px calc(20px + var(--safe-bottom));
+  overflow-y: auto;
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.3), var(--ios-specular);
+  animation: slideUpSheet 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUpSheet {
+  from { transform: translateY(105%) scale(0.96); }
+  to { transform: translateY(0) scale(1); }
+}
+
+.sheet-handle {
+  width: 42px;
+  height: 5px;
+  background: rgba(120, 120, 128, 0.35);
+  border-radius: 999px;
+  margin: 0 auto 12px;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sheet-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ios-text);
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+  margin-bottom: 6px;
+}
+
+.ios-input, .ios-textarea, .ios-select {
+  width: 100%;
+  background: var(--ios-card);
+  border: 1px solid var(--ios-glass-border);
+  border-radius: 16px;
+  padding: 10px 13px;
+  font-size: 13.5px;
+  color: var(--ios-text);
+  font-family: inherit;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  outline: none;
+}
+
+.ios-textarea {
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.5;
+}
+
+.ios-btn-primary {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #0066ff 0%, #5e5ce6 100%);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-top: 6px;
+  box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.ios-btn-secondary {
+  width: 100%;
+  border: 1px solid var(--ios-glass-border);
+  background: var(--ios-card);
+  color: var(--ios-text);
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Toast Notification */
+.ios-toast {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  z-index: 120;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+.ios-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--ios-text-tertiary);
+  font-size: 13px;
+}
+
+/* Q哥 Store Manager Exclusive Styles (iOS 27 Liquid Glass Edition) */
+.qge-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #ff6b00 0%, #ff2d55 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.qge-kpi-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.qge-kpi-item {
+  background: var(--ios-card);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid var(--ios-glass-border);
+  border-radius: 20px;
+  padding: 10px 6px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.18s ease;
+}
+
+.qge-kpi-item:active {
+  transform: scale(0.94);
+}
+
+.qge-kpi-num {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ios-text);
+  display: block;
+}
+
+.qge-kpi-txt {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ios-text-secondary);
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.template-card-btn {
+  background: var(--ios-card);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid var(--ios-glass-border);
+  border-radius: 22px;
+  padding: 12px 13px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.template-card-btn:active {
+  transform: scale(0.95);
+  border-color: #ff6b00;
+}
+
+.template-card-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ios-text);
+}
+
+.template-card-sub {
+  font-size: 11px;
+  color: var(--ios-text-secondary);
+}
+
+/* Repair AI & Panic Log Analyzer Styles */
+.panic-console {
+  background: rgba(10, 15, 29, 0.92);
+  color: #38bdf8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  border-radius: 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45);
+  width: 100%;
+  min-height: 92px;
+  line-height: 1.5;
+  outline: none;
+  resize: vertical;
+}
+
+.panic-console::placeholder {
+  color: #64748b;
+}
+
+.code-pill {
+  background: rgba(15, 23, 42, 0.88);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.code-pill:active {
+  transform: scale(0.94);
+  background: #0284c7;
+  color: #fff;
+}
+
+.diag-result-card {
+  background: var(--ios-card);
+  backdrop-filter: blur(30px) saturate(195%);
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(255, 107, 0, 0.5);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-md);
+}
+
+.diag-section-tag {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
